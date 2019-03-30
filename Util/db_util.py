@@ -1,8 +1,10 @@
-
-#  author   ：feng
-#  time     ：2018/1/25
-#  function : 数据库抽象功能函数
-
+# -*- coding: utf-8 -*-
+#-------------------------------------------------
+#   File Name：     db_util
+#   Author :        fengge
+#   date：          2019/3/27
+#   Description :   数据库操作工具
+#-------------------------------------------------
 import pymysql
 from config import environments,environment_name
 from DBUtils.PooledDB import PooledDB
@@ -34,6 +36,7 @@ class dbutil:
             database=db_config["database"],
             charset='utf8'
         )
+
     def insertItem(self,item):
         #insert into student_info(stuName,stuAge) values('liutao',13)
         table=item["table"]+"("

@@ -1,3 +1,10 @@
+# -*- coding: utf-8 -*-
+#-------------------------------------------------
+#   File Name：     config
+#   Author :        fengge
+#   date：          2019/3/27
+#   Description :   配置文件
+#-------------------------------------------------
 environments={
     "aliyun":{
           "dbs": {
@@ -9,10 +16,10 @@ environments={
     },
     "local":{
             "dbs":{
-                "host" : '47.104.236.183',
+                "host" : '127.0.0.1',
                 "user": 'root',
-                "password":'SLX..eds123',
-                 "database" : 'eds_web',
+                "password":'123456',
+                 "database" : 'eds_base',
             },
     },
     "liwei": {
@@ -25,6 +32,8 @@ environments={
     }
 }
 
-environment_name="liwei"
-
+environment_name="local"
 environment=environments[environment_name]
+import os
+project_dir = os.path.dirname(os.path.abspath(__file__))
+data_dir = os.path.dirname(os.path.abspath(__file__))

@@ -1,5 +1,5 @@
 from  Util.db_util import dbutil
-dbs=dbutil()
+dbs=dbutil("liwei")
 
 def get_tf_df():
     '''
@@ -11,11 +11,11 @@ def get_tf_df():
 
     import jieba.posseg as pseg
 
-    # code_list = ["0801", "0802", "0803", "0804", "0805", "0806", "0807", "0808", "0809", "0810",
-    #              "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0820",
-    #              "0821", "0822", "0823", "0824", "0825", "0826", "0827", "0828", "0829", "0830",
-    #              "0831", "0832"]
-    code_list = ['0812']
+    code_list = ["0801", "0802", "0803", "0804", "0805", "0806", "0807", "0808", "0809", "0810",
+                 "0811", "0812", "0813", "0814", "0815", "0816", "0817", "0818", "0819", "0820",
+                 "0821", "0822", "0823", "0824", "0825", "0826", "0827", "0828", "0829", "0830",
+                 "0831", "0832"]
+    # code_list = ['0812']
 
     code_num = dict()
 
@@ -38,8 +38,7 @@ def get_tf_df():
             for k, v in word_dict.items():
                 df = df_dict.get(k, 0) + v
                 df_dict[k] = df
-
-        fw = open(".\\test\\tf_df\\%s.csv" % (code, code), "w", encoding="utf8")
+        fw = open("test\\tf_df_%s.csv" % (code,), "w", encoding="utf8")
         fw.write("term,tf,df\n")
         for k, v in tf_dict.items():
             df = df_dict.get(k, 0)
@@ -66,7 +65,7 @@ def get_pf():
     word_list = []
     for code in code_list:
 
-        the_data = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+        the_data = pd.read_csv('test\\tf_df_%s.csv' % code)
         for index in the_data.index:
             line_list = []
             count = [0] * len(code_list)
@@ -105,7 +104,7 @@ def get_pf():
     print(lol)
     print(len(new_word_list))
     new_word_list.sort(key=lambda k: k[1], reverse=True)
-    the_file = open(".\\test\\pf_df.csv", 'w', encoding='utf8')
+    the_file = open("test\\pf_df.csv", 'w', encoding='utf8')
     the_file.write("%s\n" % ",".join(["term", "pf"] + code_list))
     for item in new_word_list:
         the_file.write("%s\n" % ",".join([str(i) for i in list(item)]))
@@ -130,11 +129,11 @@ def get_P():
 
     word_list = []
     for code in code_list:
-        num_dict = eval(open(".\\test\\discipline_DF.txt", 'r', encoding="utf8").read())
+        num_dict = eval(open("test\\discipline_DF.txt", 'r', encoding="utf8").read())
         sum_ = num_dict[code]
         if sum_ == 0:
             continue
-        the_df = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+        the_df = pd.read_csv('test\\tf_df_%s.csv' % code)
         for index in the_df.index:
             line_list = []
             count = [0] * len(code_list)
@@ -175,7 +174,7 @@ def get_P():
     print(lol)
     print(len(new_word_list))
     new_word_list.sort(key=lambda k: k[1], reverse=True)
-    the_file = open(".\\test\\p_value.csv", 'w', encoding='utf8')
+    the_file = open("test\\p_value.csv", 'w', encoding='utf8')
     the_file.write("%s\n" % ",".join(["term", "P"] + code_list))
     for item in new_word_list:
         the_file.write("%s\n" % ",".join([str(i) for i in list(item)]))
@@ -203,11 +202,11 @@ def get_H():
 
     word_list = []
     for code in code_list:
-        num_dict = eval(open(".\\test\\discipline_DF.txt", 'r', encoding="utf8").read())
+        num_dict = eval(open("test\\discipline_DF.txt", 'r', encoding="utf8").read())
         sum_ = num_dict[code]
         if sum_ == 0:
             continue
-        the_df = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+        the_df = pd.read_csv('test\\tf_df_%s.csv' % code)
         for index in the_df.index:
             line_list = []
             count = [0] * len(code_list)
@@ -248,7 +247,7 @@ def get_H():
     print(lol)
     print(len(new_word_list))
     new_word_list.sort(key=lambda k: k[1], reverse=True)
-    the_file = open(".\\test\\h_value.csv", 'w', encoding='utf8')
+    the_file = open("test\\h_value.csv", 'w', encoding='utf8')
     the_file.write("%s\n" % ",".join(["term", "H"] + code_list))
     for item in new_word_list:
         the_file.write("%s\n" % ",".join([str(i) for i in list(item)]))
@@ -290,18 +289,18 @@ def get_T(a=0.4, b=0.6, code='0812'):
     import pandas as pd
 
     # 读取全部候选术语的H值
-    data_h = pd.read_csv('.\\test\\h_value.csv')
+    data_h = pd.read_csv('test\\h_value.csv')
     data_h.set_index('term', inplace=True)    # 将term设为索引
 
     # 读取全部候选术语的平衡文档频次pf
-    data_pf = pd.read_csv('.\\test\\pf_df.csv')
+    data_pf = pd.read_csv('test\\pf_df.csv')
     data_pf.set_index('term', inplace=True)    # 将term设为索引
 
     # 读取候选词文档
-    data_term = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+    data_term = pd.read_csv('test\\tf_df_%s.csv' % code)
 
     # 读取文档分布数据
-    data_DF = eval(open('.\\test\\discipline_DF.txt', 'r', encoding='utf8').read())
+    data_DF = eval(open('test\\discipline_DF.txt', 'r', encoding='utf8').read())
 
     DF = data_DF[code]  # 领域内文档总数
     PF = 0  # 平衡文档数
@@ -344,7 +343,7 @@ def get_T(a=0.4, b=0.6, code='0812'):
 
     print(data_term[0:10])
 
-    fw = open('.\\test\\%s_T.csv' % (code, code), 'w', encoding='utf8')
+    fw = open('test\\%s_T.csv' % (code,), 'w', encoding='utf8')
     fw.write("%s\n" % ",".join(["term", "T", "H"]))
     for index, row in data_term.iterrows():
         term = row['term']
@@ -385,7 +384,7 @@ def get_stop_from_title(code='0812'):
     print(stop_list[0: 10])
 
     # 保留title候选停用词
-    fw = open('.\\test\\%s_title_stop.csv' % code, 'w', encoding='utf8')
+    fw = open('test\\%s_title_stop.csv' % code, 'w', encoding='utf8')
     for item in stop_list:
         fw.write("%s,%s\n" % (item[0], item[1]))
     fw.close()
@@ -400,7 +399,7 @@ def get_regex(code='0812'):
     import jieba.posseg as pseg
     import re
 
-    stop_word = {}.fromkeys(open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n'), 'ok')
+    stop_word = {}.fromkeys(open('stopword_base.txt', 'r', encoding='utf8').read().split('\n'), 'ok')
 
     s_sql = "SELECT id, title, abstract FROM paper_data WHERE discipline=%s"
     data_list = dbs.getDics(s_sql % code)
@@ -473,7 +472,7 @@ def get_regex(code='0812'):
     # 取出规则
     r_li = []
 
-    fw = open('.\\test\\%s_regex.csv' % code, 'w', encoding='utf8')
+    fw = open('test\\%s_regex.csv' % code, 'w', encoding='utf8')
     fw.write("%s,%s\n" % ("re_s", "sum"))
     for re_s, r_list in regex_dict.items():
         fw.write("%s,%s,%s\n" % (re_s, len(r_list), "/".join(r_list[0:20])))
@@ -481,7 +480,7 @@ def get_regex(code='0812'):
             r_li.append(re_s)
     fw.close()
 
-    fw = open('.\\test\\%s_regex_TOP.txt' % code, 'w', encoding='utf8')
+    fw = open('test\\%s_regex_TOP.txt' % code, 'w', encoding='utf8')
     fw.write("%s" % "\n".join(r_li))
     fw.close()
 
@@ -561,8 +560,10 @@ def get_CTerm_seg(code=''):
     import re
     import jieba
     import jieba.posseg as pseg
-    jieba.load_userdict('E:\\eds\\algorithm\\li\\extract\\dicts\\user_dict_jieba.txt')
-    regex_list = open('.\\test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n')
+    # jieba.load_userdict('user_dict_jieba.txt')
+    jieba.load_userdict('userdict.txt')
+
+    regex_list = open('test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n')
     # regex_list = ['n+l+a+j']
     # 生成前缀、后缀规则
     ex_regex = []
@@ -581,7 +582,7 @@ def get_CTerm_seg(code=''):
     print(len(regex_list))
     del ex_regex
 
-    stop_word = {}.fromkeys(open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n') + ['\n'], 'ok')
+    stop_word = {}.fromkeys(open('stopword_base.txt', 'r', encoding='utf8').read().split('\n') + ['\n'], 'ok')
 
     # save_flag = ["an", "j", "n", "nz", "vn"]    # 要保留的单词的词性
 
@@ -630,12 +631,12 @@ def get_CTerm_seg(code=''):
 
     print("N:%s\n" % N)
 
-    fw_0 = open('.\\test\\C_WORD_%s\\%s_C_1.csv' % (code, code), 'w', encoding='utf8')
-    fw_1 = open('.\\test\\C_WORD_%s\\%s_C_2.csv' % (code, code), 'w', encoding='utf8')
-    fw_2 = open('.\\test\\C_WORD_%s\\%s_C_3.csv' % (code, code), 'w', encoding='utf8')
-    fw_3 = open('.\\test\\C_WORD_%s\\%s_C_4.csv' % (code, code), 'w', encoding='utf8')
-    fw_4 = open('.\\test\\C_WORD_%s\\%s_C_5.csv' % (code, code), 'w', encoding='utf8')
-    fw_5 = open('.\\test\\C_WORD_%s\\%s_C_6.csv' % (code, code), 'w', encoding='utf8')
+    fw_0 = open('test\\C_WORD_%s_%s_C_1.csv' % (code, code), 'w', encoding='utf8')
+    fw_1 = open('test\\C_WORD_%s_%s_C_2.csv' % (code, code), 'w', encoding='utf8')
+    fw_2 = open('test\\C_WORD_%s_%s_C_3.csv' % (code, code), 'w', encoding='utf8')
+    fw_3 = open('test\\C_WORD_%s_%s_C_4.csv' % (code, code), 'w', encoding='utf8')
+    fw_4 = open('test\\C_WORD_%s_%s_C_5.csv' % (code, code), 'w', encoding='utf8')
+    fw_5 = open('test\\C_WORD_%s_%s_C_6.csv' % (code, code), 'w', encoding='utf8')
     fw_0.write('term,regex,f\n')
     fw_1.write('term,regex,f\n')
     fw_2.write('term,regex,f\n')
@@ -678,7 +679,7 @@ def get_CTerm_seg(code=''):
     fw_4.close()
     fw_5.close()
 
-    fw = open('.\\test\\C_WORD_%s\\other_word.csv' % code, 'w', encoding='utf8')
+    fw = open('test\\C_WORD_%s_other_word.csv' % code, 'w', encoding='utf8')
     fw.write('term\n')
     for k, v in head_tail.items():
         fw.write('%s\n' % k)
@@ -697,11 +698,11 @@ def get_DR(code='0812'):
     import pandas as pd
 
     # 读取P值文件
-    p_df = pd.read_csv('.\\test\\p_value.csv')
+    p_df = pd.read_csv('test\\p_value.csv')
     p_df.set_index('term', inplace=True)
 
     # 读取候选词文档
-    data_term = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+    data_term = pd.read_csv('test\\tf_df_%s.csv' % code)
 
     DR_list = []
 
@@ -717,7 +718,7 @@ def get_DR(code='0812'):
 
     print(data_term[0:10])
 
-    fw = open('.\\test\\%s_DR.csv' % (code, code), 'w', encoding='utf8')
+    fw = open('test\\%s_DR.csv' % code, 'w', encoding='utf8')
     fw.write("%s\n" % ",".join(["term", "DR"]))
     for index, row in data_term.iterrows():
         term = row['term']
@@ -738,11 +739,11 @@ def get_DC(code="0812"):
     import math
 
     # 读取P值文件
-    p_df = pd.read_csv('.\\test\\p_value.csv')
+    p_df = pd.read_csv('test\\p_value.csv')
     p_df.set_index('term', inplace=True)
 
     # 读取候选词文档
-    data_term = pd.read_csv('.\\test\\tf_df\\%s.csv' % code)
+    data_term = pd.read_csv('test\\tf_df_%s.csv' % code)
 
     DC_list = []
 
@@ -762,7 +763,7 @@ def get_DC(code="0812"):
 
     print(data_term[0:10])
 
-    fw = open('.\\test\\%s_DC.csv' % (code, code), 'w', encoding='utf8')
+    fw = open('test\\%s_DC.csv' % (code,), 'w', encoding='utf8')
     fw.write("%s\n" % ",".join(["term", "DC"]))
     for index, row in data_term.iterrows():
         term = row['term']
@@ -797,12 +798,12 @@ def get_likelihood(code='0812'):
     word_length = [2, 3, 4, 5, 6]
     # word_length = [2]
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_C_%s.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('test\\C_WORD_%s_%s_C_%s.csv' % (code, code, str(length)))
         sum_x = [0] * len(data_df)
         sum_y = [0] * len(data_df)
 
         for ll in range(1, length):
-            word_dict = pd.read_csv('.\\test\\C_WORD_%s\\%s_C_%s.csv' % (code, code, str(ll)))
+            word_dict = pd.read_csv('test\\C_WORD_%s_%s_C_%s.csv' % (code, code, str(ll)))
 
             word_dict.set_index('term', inplace=True)
             for index in data_df.index:
@@ -839,19 +840,19 @@ def get_likelihood(code='0812'):
         print(data_df[0:10])
         print("*"*10)
 
-        data_df.to_csv('.\\test\\C_WORD_%s\\%s_%s_result.csv' % (code, code, str(length)), index=None)
+        data_df.to_csv('test\\C_WORD_%s_%s_%s_result.csv' % (code, code, str(length)), index=None)
 
 
 def word_filter(code="0812"):
     print("word_filter")
     import pandas as pd
 
-    regex_list = open('.\\test\\%s_regex_TOP.txt' % (code, code), 'r', encoding='utf8').read().split('\n')
+    regex_list = open('test\\%s_regex_TOP.txt' %  code, 'r', encoding='utf8').read().split('\n')
 
     word_length = [2, 3, 4, 5, 6]
     # word_length = [2]
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_%s_result.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('test\\C_WORD_%s_%s_%s_result.csv' % (code, code, str(length)))
         term_list = []
         f_list = []
         r_list = []
@@ -876,7 +877,7 @@ def word_filter(code="0812"):
         new_df['regex'] = r_list
         new_df['likelihood'] = likelihood_list
         print(new_df[0: 10])
-        new_df.to_csv('.\\test\\C_WORD_%s\\%s_%s_likelihood.csv' % (code, code, str(length)), index=None)
+        new_df.to_csv('test\\C_WORD_%s_%s_%s_likelihood.csv' % (code, code, str(length)), index=None)
 
 
 def get_word_dict(code='0812'):
@@ -886,18 +887,18 @@ def get_word_dict(code='0812'):
     """
     import pandas as pd
 
-    word_length = [6, 5, 4, 3, 2, 1]
+    word_length = [6, 5, 4, 3, 2]
     word_list = []
 
     for length in word_length:
         print(length)
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_%s_likelihood.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('test\\C_WORD_%s_%s_%s_likelihood.csv' % (code, code, str(length)))
 
         for index in data_df.index:
             term = str(data_df.loc[index]['term'])
             word_list.append(str(term))
 
-    fw = open('.\\test\\C_WORD_%s\\%s_word_dict.txt' % (code, code), 'w', encoding='utf8')
+    fw = open('test\\C_WORD_%s_%s_word_dict.txt' % (code, code), 'w', encoding='utf8')
     fw.write("\n".join(word_list))
     fw.close()
 
@@ -911,13 +912,13 @@ def get_C_Value(code='0812'):
     import pandas as pd
     import math
 
-    stop_word = {}.fromkeys(open('.\\test\\%s_stop.txt' % (code, code), 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_word = {}.fromkeys(open('test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
 
     # word_length = [1]
     word_length = [6, 5, 4, 3, 2, 1]
-    word_dict = {}.fromkeys(open('.\\test\\C_WORD_%s\\%s_word_dict.txt' % (code, code), 'r', encoding='utf8').read().split('\n'), [0, 0])  # 记录词的母串个数和作为嵌套串出现的频次
+    word_dict = {}.fromkeys(open('test\\C_WORD_%s_%s_word_dict.txt' % (code, code), 'r', encoding='utf8').read().split('\n'), [0, 0])  # 记录词的母串个数和作为嵌套串出现的频次
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_%s_likelihood.csv' % (code, str(length)))
+        data_df = pd.read_csv('test\\C_WORD_%s_%s_%s_likelihood.csv' % (code, str(length)))
         c_value_list = []
         term_list = []
         f_list = []
@@ -980,7 +981,7 @@ def get_C_Value(code='0812'):
 
         new_df = new_df.sort_values(by='c_value', axis=0, ascending=False)
 
-        new_df.to_csv('.\\test\\C_WORD_%s\\%s_%s_c_value.csv' % (code, code, str(length)), index=None)
+        new_df.to_csv('test\\C_WORD_%s_%s_%s_c_value.csv' % (code, code, str(length)), index=None)
 
         print("*"*10)
 
@@ -988,10 +989,11 @@ def get_C_Value(code='0812'):
 def get_top(code='0812', min_c_value=4.6):
     import pandas as pd
     import re
-
-    stop_word = {}.fromkeys(open('.\\test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n')+open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n'), "ok")
-    stop_regex = {}.fromkeys(open('.\\test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
-    save_regex = {}.fromkeys(open('.\\test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_word = {}.fromkeys(open('stopword_base.txt', 'r',encoding='utf8').read().split('\n'), "ok")
+    # stop_word = {}.fromkeys(open('test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n')+open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n'), "ok")
+    # stop_regex = {}.fromkeys(open('test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_regex = {}
+    save_regex = {}.fromkeys(open('test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
 
     word_length = [6, 5, 4, 3, 2, 1]
     # word_length = [4, 3, 2]
@@ -1003,7 +1005,7 @@ def get_top(code='0812', min_c_value=4.6):
     ll_list = []
     f_list = []
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_%s_c_value.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('.\\test\\C_WORD_%s_%s_%s_c_value.csv' % (code, code, str(length)))
         for index in data_df.index:
             split_term = data_df.loc[index]['term']
             c_value = data_df.loc[index]['c_value']
@@ -1058,9 +1060,10 @@ def get_word(code='0812'):
     import pandas as pd
     import re
 
-    stop_word = {}.fromkeys(open('.\\test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
-    regex_dict = {}.fromkeys(open('.\\test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
-
+    # stop_word = {}.fromkeys(open('.\\test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    # regex_dict = {}.fromkeys(open('.\\test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_word={}
+    regex_dict={}
     word_length = [6, 5, 4, 3, 2, 1]
 
     term_list = []
@@ -1069,7 +1072,7 @@ def get_word(code='0812'):
     ll_list = []
     f_list = []
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_C_%s.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('.\\test\\C_WORD_%s_%s_C_%s.csv' % (code, code, str(length)))
         for index in data_df.index:
             split_term = data_df.loc[index]['term']
             regex = data_df.loc[index]['regex']
@@ -1119,12 +1122,12 @@ def get_pmi(N=9809513, code='0812'):
     word_length = [2, 3, 4, 5, 6]
     # word_length = [3]
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_C_%s.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('test\\C_WORD_%s_%s_C_%s.csv' % (code, code, str(length)))
         F_word = [[0 for i in range(length-1)] for j in range(len(data_df))]  # 前半部分出现的频率
         B_word = [[0 for i in range(length-1)] for j in range(len(data_df))]  # 后半部分出现的频率
         f_list = [0]*len(data_df)
         for ll in range(1, length):
-            word_dict = pd.read_csv('.\\test\\C_WORD_%s\\%s_C_%s.csv' % (code, code, str(ll)))
+            word_dict = pd.read_csv('test\\C_WORD_%s_%s_C_%s.csv' % (code, code, str(ll)))
             word_dict.set_index('term', inplace=True)
 
             for index in data_df.index:
@@ -1172,16 +1175,16 @@ def get_pmi(N=9809513, code='0812'):
         # print(data_df[0:10])
         print("*" * 10)
 
-        data_df.to_csv('.\\test\\C_WORD_%s\\%s_%s_pmi.csv' % (code, code, str(length)), index=None)
+        data_df.to_csv('test\\C_WORD_%s_%s_%s_pmi.csv' % (code, code, str(length)), index=None)
 
 
 def pmi_filter(code='0812', min_pmi=0.5):
     import pandas as pd
     import re
 
-    stop_word = {}.fromkeys(open('.\\test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n')+open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n'), "ok")
-    stop_regex = {}.fromkeys(open('.\\test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
-    save_regex = {}.fromkeys(open('.\\test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_word = {}.fromkeys(open('test\\%s_stop.txt' % code, 'r', encoding='utf8').read().split('\n')+open('.\\dicts\\stopword_base.txt', 'r', encoding='utf8').read().split('\n'), "ok")
+    stop_regex = {}.fromkeys(open('test\\%s_regex_stop.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
+    save_regex = {}.fromkeys(open('test\\%s_regex_TOP.txt' % code, 'r', encoding='utf8').read().split('\n'), "ok")
 
     word_length = [6, 5, 4, 3, 2, 1]
     # word_length = [4, 3, 2]
@@ -1193,7 +1196,7 @@ def pmi_filter(code='0812', min_pmi=0.5):
     ll_list = []
     f_list = []
     for length in word_length:
-        data_df = pd.read_csv('.\\test\\C_WORD_%s\\%s_%s_c_value.csv' % (code, code, str(length)))
+        data_df = pd.read_csv('.\\test\\C_WORD_%s_%s_%s_c_value.csv' % (code, code, str(length)))
         for index in data_df.index:
             split_term = data_df.loc[index]['term']
             apmi = data_df.loc[index]['apmi']
@@ -1239,7 +1242,7 @@ def pmi_filter(code='0812', min_pmi=0.5):
     new_df = new_df.sort_values(by='c_value', axis=0, ascending=False)
 
     # new_df[0: top].to_csv('.\\test\\C_WORD_%s\\%s_result_%s_1.csv' % (code, code, str(top)), index=None)
-    new_df.to_csv('.\\test\\C_WORD_%s\\%s_result_min_pmi_%s.csv' % (code, code, str(min_pmi)), index=None)
+    new_df.to_csv('test\\C_WORD_%s_%s_result_min_pmi_%s.csv' % (code, code, str(min_pmi)), index=None)
 
     pass
 
@@ -1284,27 +1287,27 @@ def StopAndRegex(code='0812'):
 
 def WORD_SEG(code='0802'):
     # 规则取词
-    get_CTerm_seg('0802')
+    get_CTerm_seg(code)
 
 
-def LIKELIHOOD():
+def LIKELIHOOD(code='0802'):
     '''
     计算似然比
     :return:
     '''
-    # get_likelihood()
-    word_filter()
+    get_likelihood(code)
+    word_filter(code)
     pass
 
 
-def C_VALUE():
+def C_VALUE(code=""):
     '''
     计算C-value
     :return:
     '''
-    # get_word_dict()
-    # get_C_Value()
-    get_top()
+    get_word_dict(code)
+    get_C_Value(code)
+    get_top(code)
     pass
 
 
@@ -1325,7 +1328,6 @@ def PMI():
 
 
 if __name__ == "__main__":
-    dbutil
     # regex_list = ['n+n', 'v+n', 'n+v',
     #               'n+n+n', 'n+v+n', 'n+n+v',
     #               'n+n+n+n', 'n+n+v+n', 'n+n+vn+n',
@@ -1340,23 +1342,21 @@ if __name__ == "__main__":
     # get_pf()
     # get_H()
     # get_T()
-
     # get_P()
-    # get_DR()
-    # get_DC()
-
-    StopAndRegex(code='0802')
-
-    # WORD_SEG(code='0802')
+    for code in code_list:
+        # get_DR(code=code)
+        # get_DC(code=code)
+        StopAndRegex(code=code)
+        # WORD_SEG(code=code)
     #
-    # LIKELIHOOD()
+        # LIKELIHOOD(code=code)
 
-    # C_VALUE()
+        # C_VALUE(code=code)
 
-    # TF_IDF()
+        TF_IDF()
 
-    # PMI()
+        PMI()
 
-    # MAP(path='.\\test\\C_WORD_3\\result.txt')
-    # R_precision(path='.\\test\\C_WORD_3\\result.txt')
+        MAP(path='.\\test\\C_WORD_3\\result.txt')
+        R_precision(path='.\\test\\C_WORD_3\\result.txt')
     pass
