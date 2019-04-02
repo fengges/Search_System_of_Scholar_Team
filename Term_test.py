@@ -8,7 +8,7 @@
 from copy import deepcopy
 from Term_Extraction.LoadData import getData
 from Term_Extraction.ExportUserDict import ExporUserDict
-from Term_Extraction.FindRuleTerminology import getTermRule
+from Term_Extraction.FindRuleTerminology import getTermRule,fenci,txtToPickle
 from  Util.db_util import dbutil
 import pickle
 if __name__=="__main__":
@@ -21,8 +21,8 @@ if __name__=="__main__":
     #
     # f = open('Data/paper', 'wb')
     # pickle.dump(paper, f)
-    f = open('Data/paper', 'rb')
-    paper=pickle.load(f)
+    # f = open('Data/paper', 'rb')
+    # paper=pickle.load(f)
     # word=set()
     # for co in paper:
     #     for p in paper[co]:
@@ -32,8 +32,12 @@ if __name__=="__main__":
     #             word.add(t)
     # word=list(word)
     # ExporUserDict(word,infile="/Data/userdict.txt")
-    del paper['0823']
-    getTermRule(paper)
+    # fenci(paper)
+
+    txtToPickle()
+    f = open('Data/paper2', 'rb')
+    paper=pickle.load(f)
+    # getTermRule(paper)
 
     pass
 

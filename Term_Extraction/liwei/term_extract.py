@@ -1349,7 +1349,7 @@ if __name__ == "__main__":
         StopAndRegex(code=code)
         # WORD_SEG(code=code)
     #
-        # LIKELIHOOD(code=code)
+        LIKELIHOOD(code=code)
 
         # C_VALUE(code=code)
 

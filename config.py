@@ -31,7 +31,7 @@ environments={
         },
     }
 }
-
+tmp_dir="F:\\tmp"
 environment_name="local"
 environment=environments[environment_name]
 import os

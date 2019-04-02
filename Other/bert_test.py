@@ -47,7 +47,7 @@ def desVec():
         ids.append(dict['id'])
     files.close()
     print("desc data")
-    tsne = TSNE(perplexity=200)
+    tsne = TSNE(perplexity=200,verbose=2)
     X = tsne.fit_transform(ndpp)
     files = open(data_dir + "/Data/paperDesVec.txt", 'w', encoding='utf8')
     print("save data")
