@@ -10,15 +10,25 @@ from copy import deepcopy
 import jieba.posseg as pseg
 from config import data_dir,tmp_dir
 from tqdm import tqdm
-def txtToPickle(input=data_dir+"/Data/paper_fenci.txt",output=data_dir+"/Data/paper2"):
-    paper2=[]
+def txtToPickle(code_list=[],input=data_dir+"/Data/paper_fenci.txt",output=data_dir+"/Data/paper2"):
+    '''
+    Parameter:
+        - code_list: 保留的编码
+        - input:    输入的文件
+        - output:  输出的文件
+    '''
+    paper2={}
     files=open(input,'r',encoding='utf8')
     while True:
         line=files.readline()
         if not line:
             break
         dict=eval(line)
-        paper2.append(dict)
+        if code_list and dict["DISCIPLINE_CODE"] not in code_list:
+            continue
+        if dict["DISCIPLINE_CODE"] not in paper2:
+            paper2[dict["DISCIPLINE_CODE"]]=[]
+        paper2[dict["DISCIPLINE_CODE"]].append(dict)
     pickle.dump(paper2,open(output,'wb'))
 def fenci(paper,userdict=data_dir+"/Data/user.txt",out=data_dir+"/Data/paper_fenci.txt"):
     '''
@@ -36,7 +46,7 @@ def fenci(paper,userdict=data_dir+"/Data/user.txt",out=data_dir+"/Data/paper_fen
         for data in tqdm(paper[code]):
             t_seg = [(word, flag) for word, flag in pseg.cut(data["title"])]
             d_seg = [(word, flag) for word, flag in pseg.cut(data["abstract"])]
-            item={'id':data["id"],"t_seg":t_seg,"d_seg":d_seg}
+            item={'id':data["id"],"t_seg":t_seg,"d_seg":d_seg,"DISCIPLINE_CODE":code}
             file.write(str(item)+'\n')
     file.close()
 def getTermRule(paper,stop_flag=None,n_gram=[2,6],max_step=10):
